@@ -20,9 +20,9 @@ type TableImpl interface {
 	/**
 	 * TableImpl represents a table in a database.
 	 **/
-	AddRow(ctx context.Context, rdb *redis.Client, id string, key string, value interface{}) error
+	AddColumn(ctx context.Context, rdb *redis.Client, id string, key string, value interface{}) error
 	DeleteRow(ctx context.Context, rdb *redis.Client, id string, key string) error
-	AddRows(ctx context.Context, rdb *redis.Client, id string, data map[string]interface{}) error
+	AddRow(ctx context.Context, rdb *redis.Client, id string, data map[string]interface{}) error
 	GetRow(ctx context.Context, rdb *redis.Client, id string) (map[string]interface{}, error)
 	GetTable(ctx context.Context, rdb *redis.Client) ([]map[string]interface{}, error)
 }
@@ -36,23 +36,22 @@ func TableImplInit(table string) TableImpl {
 	}
 }
 
-func (t Table) AddRow(ctx context.Context, rdb *redis.Client, id string, key string, value interface{}) error {
+func (t Table) AddColumn(ctx context.Context, rdb *redis.Client, id string, key string, value interface{}) error {
 	/**
-	 * AddRow adds a row to a table.
+	 * AddColumn adds a column to a row in a table.
 	 */
 	identifier := fmt.Sprintf("%s:%s", t.Name, id)
 
-	// Check if row already exists.
+	// Check if column already exists.
 	if _, err := rdb.HGet(ctx, identifier, key).Result(); err != redis.Nil && err != nil {
-		// Row does not exist.
 		slog.Error(err.Error())
 		return constant.InternalError.GetError()
 	} else if err != redis.Nil {
-		// Row already exists.
+		// Column already exists.
 		return constant.Conflict.GetError()
 	}
 
-	// Add row to the table.
+	// Add column to the table/row.
 	if err := rdb.HSet(ctx, identifier, key, value).Err(); err != nil {
 		slog.Error(err.Error())
 		return constant.InternalError.GetError()
@@ -81,7 +80,7 @@ func (t Table) DeleteRow(ctx context.Context, rdb *redis.Client, id string, key 
 	return constant.Success.GetError()
 }
 
-func (t Table) AddRows(ctx context.Context, rdb *redis.Client, id string, data map[string]interface{}) error {
+func (t Table) AddRow(ctx context.Context, rdb *redis.Client, id string, data map[string]interface{}) error {
 	/**
 	 * AddRows adds multiple rows to a table.
 	 */

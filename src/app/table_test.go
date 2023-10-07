@@ -17,13 +17,13 @@ func setUp() *redis.Client {
 	return c
 }
 
-type AddRowsTest struct {
+type AddRowTest struct {
 	table Table
 	id    string
 	data  map[string]interface{}
 }
 
-var AddRowsTests = []AddRowsTest{
+var AddRowTests = []AddRowTest{
 	{
 		table: Table{Name: "test_table"},
 		id:    "test_id",
@@ -50,13 +50,13 @@ var AddRowsTests = []AddRowsTest{
 	},
 }
 
-func TestAddRows(t *testing.T) {
+func TestAddRow(t *testing.T) {
 	ctx := context.Background()
 	client := setUp()
 
-	for _, test := range AddRowsTests {
+	for _, test := range AddRowTests {
 		// Create Row
-		err := test.table.AddRows(ctx, client, test.id, test.data)
+		err := test.table.AddRow(ctx, client, test.id, test.data)
 		if err != constant.Success.GetError() {
 			t.Errorf("AddRows(%s, %s): expected %v, actual %v", test.id, test.data, constant.Success.GetError(), err)
 		}
@@ -75,7 +75,7 @@ func TestAddRows(t *testing.T) {
 	}
 }
 
-type AddRowTest struct {
+type AddColumnTest struct {
 	table Table
 	id    string
 	key   string
@@ -84,7 +84,7 @@ type AddRowTest struct {
 	expected constant.Response
 }
 
-var AddRowTests = []AddRowTest{
+var AddColumnTests = []AddColumnTest{
 	{
 		table:    Table{Name: "test_table"},
 		id:       "test_id",
@@ -122,15 +122,15 @@ var AddRowTests = []AddRowTest{
 	},
 }
 
-func TestAddRow(t *testing.T) {
+func TestAddColumn(t *testing.T) {
 	ctx := context.Background()
 	client := setUp()
 
-	for _, test := range AddRowTests {
+	for _, test := range AddColumnTests {
 		// Create Row
-		err := test.table.AddRow(ctx, client, test.id, test.key, test.data)
+		err := test.table.AddColumn(ctx, client, test.id, test.key, test.data)
 		if err != test.expected.GetError() {
-			t.Errorf("AddRow(%s, %s, %s): expected %v, actual %v", test.id, test.key, test.data, test.expected.GetError(), err)
+			t.Errorf("AddColumn(%s, %s, %s): expected %v, actual %v", test.id, test.key, test.data, test.expected.GetError(), err)
 		}
 
 		// Check if Row was created
@@ -190,14 +190,14 @@ func TestDeleteRow(t *testing.T) {
 
 	// setup
 	table := Table{Name: "test"}
-	if err := table.AddRow(ctx, client, "test_id", "test_key", "test_data"); err != constant.Success.GetError() {
-		t.Errorf("AddRow(%s, %s, %s): expected %v, actual %v", "test_id", "test_key", "test_data", constant.Success.GetError(), err)
+	if err := table.AddColumn(ctx, client, "test_id", "test_key", "test_data"); err != constant.Success.GetError() {
+		t.Errorf("AddColumn(%s, %s, %s): expected %v, actual %v", "test_id", "test_key", "test_data", constant.Success.GetError(), err)
 	}
-	if err := table.AddRow(ctx, client, "test_id", "test_key2", "test_data2"); err != constant.Success.GetError() {
-		t.Errorf("AddRow(%s, %s, %s): expected %v, actual %v", "test_id", "test_key2", "test_data2", constant.Success.GetError(), err)
+	if err := table.AddColumn(ctx, client, "test_id", "test_key2", "test_data2"); err != constant.Success.GetError() {
+		t.Errorf("AddColumn(%s, %s, %s): expected %v, actual %v", "test_id", "test_key2", "test_data2", constant.Success.GetError(), err)
 	}
-	if err := table.AddRow(ctx, client, "test_new", "test_key", "test_data"); err != constant.Success.GetError() {
-		t.Errorf("AddRow(%s, %s, %s): expected %v, actual %v", "test_new", "test_key", "test_data", constant.Success.GetError(), err)
+	if err := table.AddColumn(ctx, client, "test_new", "test_key", "test_data"); err != constant.Success.GetError() {
+		t.Errorf("AddColumn(%s, %s, %s): expected %v, actual %v", "test_new", "test_key", "test_data", constant.Success.GetError(), err)
 	}
 
 	for i, test := range DeleteRowTests {
