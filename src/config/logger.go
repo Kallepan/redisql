@@ -25,8 +25,10 @@ func getLoggerLevel() slog.Level {
 	case "DEBUG":
 		return slog.LevelDebug
 	case "INFO":
+		return slog.LevelInfo
+	case "ERROR":
 		return slog.LevelError
 	default:
-		return slog.LevelInfo
+		return slog.LevelDebug
 	}
 }
