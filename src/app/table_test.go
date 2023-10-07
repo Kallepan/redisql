@@ -5,12 +5,12 @@ import (
 	"testing"
 
 	"github.com/kallepan/redisql/constant"
-	"github.com/kallepan/redisql/mocks"
+	"github.com/kallepan/redisql/mock"
 	"github.com/redis/go-redis/v9"
 )
 
 func setUp() *redis.Client {
-	c := mocks.InitMockDB()
+	c := mock.InitMockDB()
 
 	c.FlushAll(context.Background())
 
