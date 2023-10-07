@@ -14,3 +14,8 @@ bash hack/test.sh
 # Build
 TODO
 ```
+
+## TODO
+
+- [ ] Add support for secondary indexes
+- [ ] Add support for querying by secondary indexes
