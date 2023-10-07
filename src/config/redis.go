@@ -55,10 +55,10 @@ func getConnectionDetails() (string, string, int) {
 	**/
 	host := os.Getenv("REDIS_DSN")
 	port := os.Getenv("REDIS_PORT")
-	addr := fmt.Sprintf("%s:%s", host, port)
-
 	pass := os.Getenv("REDIS_PASSWORD")
 	db := os.Getenv("REDIS_DB")
+
+	addr := fmt.Sprintf("%s:%s", host, port)
 	intDB := convertToInt(db)
 
 	return addr, pass, intDB
